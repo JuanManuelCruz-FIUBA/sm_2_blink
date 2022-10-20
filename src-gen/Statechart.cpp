@@ -10,7 +10,6 @@ Implementation of the state machine 'Statechart'
 
 
 Statechart::Statechart() :
-	myEvent_raised(false),
 	viMyCounter(0),
 	timerService(sc_null),
 	isExecuting(false)
@@ -47,11 +46,6 @@ void Statechart::dispatch_event(SctEvent * event)
 	}
 	switch(event->name)
 	{
-		case myEvent:
-		{
-			iface_dispatch_event(event);
-			break;
-		}
 		case Statechart_Blink_Turn_OFF_time_event_0:
 		{
 			timeEvents[0] = true;
@@ -73,11 +67,6 @@ void Statechart::iface_dispatch_event(SctEvent * event)
 {
 	switch(event->name)
 	{
-		case myEvent:
-		{
-			internal_raiseMyEvent();
-			break;
-		}
 		default:
 			/* do nothing */
 			break;
@@ -173,16 +162,6 @@ sc_boolean Statechart::isStateActive(StatechartStates state) const
 	}
 }
 
-/* Functions for event myEvent in interface  */
-void Statechart::raiseMyEvent()
-{
-	inEventQueue.push_back(new SctEvent__myEvent(myEvent));
-        runCycle();
-}
-void Statechart::internal_raiseMyEvent()
-{
-	myEvent_raised = true;
-}
 
 // implementations of all internal functions
 /* Entry action for state 'Turn_OFF'. */
@@ -298,23 +277,14 @@ sc_integer Statechart::Blink_Turn_OFF_react(const sc_integer transitioned_before
 	sc_integer transitioned_after = transitioned_before;
 	if ((transitioned_after) < (0))
 	{ 
-		if (myEvent_raised)
+		if (timeEvents[0])
 		{ 
 			exseq_Blink_Turn_OFF();
+			timeEvents[0] = false;
 			enseq_Blink_Turn_ON_default();
 			react(0);
 			transitioned_after = 0;
-		}  else
-		{
-			if (timeEvents[0])
-			{ 
-				exseq_Blink_Turn_OFF();
-				timeEvents[0] = false;
-				enseq_Blink_Turn_ON_default();
-				react(0);
-				transitioned_after = 0;
-			} 
-		}
+		} 
 	} 
 	/* If no transition was taken then execute local reactions */
 	if ((transitioned_after) == (transitioned_before))
@@ -329,23 +299,14 @@ sc_integer Statechart::Blink_Turn_ON_react(const sc_integer transitioned_before)
 	sc_integer transitioned_after = transitioned_before;
 	if ((transitioned_after) < (0))
 	{ 
-		if (myEvent_raised)
+		if (timeEvents[1])
 		{ 
 			exseq_Blink_Turn_ON();
+			timeEvents[1] = false;
 			enseq_Blink_Turn_OFF_default();
 			react(0);
 			transitioned_after = 0;
-		}  else
-		{
-			if (timeEvents[1])
-			{ 
-				exseq_Blink_Turn_ON();
-				timeEvents[1] = false;
-				enseq_Blink_Turn_OFF_default();
-				react(0);
-				transitioned_after = 0;
-			} 
-		}
+		} 
 	} 
 	/* If no transition was taken then execute local reactions */
 	if ((transitioned_after) == (transitioned_before))
@@ -356,7 +317,6 @@ sc_integer Statechart::Blink_Turn_ON_react(const sc_integer transitioned_before)
 }
 
 void Statechart::clearInEvents() {
-	myEvent_raised = false;
 	timeEvents[0] = false;
 	timeEvents[1] = false;
 }
@@ -393,7 +353,7 @@ void Statechart::runCycle() {
 		microStep();
 		clearInEvents();
 		dispatch_event(getNextEvent());
-	} while (((myEvent_raised) || (timeEvents[0])) || (timeEvents[1]));
+	} while ((timeEvents[0]) || (timeEvents[1]));
 	isExecuting = false;
 }
 

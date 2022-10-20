@@ -30,7 +30,6 @@ namespace statechart_events
 {
 typedef enum  {
 	invalid_event = SC_INVALID_EVENT_VALUE,
-	myEvent,
 	Statechart_Blink_Turn_OFF_time_event_0,
 	Statechart_Blink_Turn_ON_time_event_0
 } StatechartEventName;
@@ -56,11 +55,6 @@ class TypedSctEvent : public SctEvent
 		const T value;
 };
 
-class SctEvent__myEvent : public SctEvent
-{
-	public:
-		SctEvent__myEvent(StatechartEventName name_) : SctEvent(name_){};
-};
 class TimedSctEvent : public SctEvent
 {
 	public:
@@ -93,9 +87,6 @@ class Statechart : public sc::timer::TimedInterface, public sc::StatemachineInte
 					
 		static const sc_integer numStates = 2;
 		
-		
-		/*! Raises the in event 'myEvent' that is defined in the default interface scope. */
-		void raiseMyEvent();
 		
 		
 		/*! Can be used by the client code to trigger a run to completion step without raising an event. */
@@ -155,9 +146,6 @@ class Statechart : public sc::timer::TimedInterface, public sc::StatemachineInte
 		Statechart(const Statechart &rhs);
 		Statechart& operator=(const Statechart&);
 		
-		/*! Raises the in event 'myEvent' that is defined in the default interface scope. */
-		void internal_raiseMyEvent();
-		sc_boolean myEvent_raised;
 		void iface_dispatch_event(statechart_events::SctEvent * event);
 		
 		uint32_t viMyCounter;
