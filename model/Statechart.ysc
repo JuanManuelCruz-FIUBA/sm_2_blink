@@ -79,10 +79,10 @@
         <layoutConstraint xsi:type="notation:Bounds" xmi:id="_cUMu50_6Ee2DOOvoDMz1og"/>
       </children>
       <styles xsi:type="notation:ShapeStyle" xmi:id="_cUMu6E_6Ee2DOOvoDMz1og" fontName="Verdana" fillColor="16448250" lineColor="12632256"/>
-      <layoutConstraint xsi:type="notation:Bounds" xmi:id="_cUMu6U_6Ee2DOOvoDMz1og" width="265" height="309"/>
+      <layoutConstraint xsi:type="notation:Bounds" xmi:id="_cUMu6U_6Ee2DOOvoDMz1og" x="350" y="10" width="265" height="309"/>
     </children>
     <styles xsi:type="notation:DiagramStyle" xmi:id="_O4nPsQClEea895739UzP5A"/>
-    <styles xsi:type="notation:BooleanValueStyle" xmi:id="_605H0CuJEeiIGeIuy-9ybQ" name="inlineDefinitionSection"/>
+    <styles xsi:type="notation:BooleanValueStyle" xmi:id="_605H0CuJEeiIGeIuy-9ybQ" name="inlineDefinitionSection" booleanValue="true"/>
     <edges xmi:id="_cUXG0E_6Ee2DOOvoDMz1og" type="Transition" element="_cUNV0k_6Ee2DOOvoDMz1og" source="_cUMuxU_6Ee2DOOvoDMz1og" target="_cUMuz0_6Ee2DOOvoDMz1og">
       <children xsi:type="notation:DecorationNode" xmi:id="_cUXG0U_6Ee2DOOvoDMz1og" type="TransitionExpression">
         <styles xsi:type="notation:ShapeStyle" xmi:id="_cUXG0k_6Ee2DOOvoDMz1og"/>
