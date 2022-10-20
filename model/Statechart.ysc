@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0">
-  <sgraph:Statechart xmi:id="_O39IYAClEea895739UzP5A" specification="// Use the event driven execution model.&#xA;// Switch to cycle based behavior&#xA;// by specifying '@CycleBased(200)'.&#xA;@EventDriven&#xA;&#xA;// Use @SuperSteps(yes) to enable&#xA;// super step semantics.&#xA;@SuperSteps(no)&#xA;&#xA;import : &quot;../modules/leds/leds.h&quot;&#xA;&#xA;interface:&#xA;&#x9;// Define events and variables here. &#xA;&#x9;// Use CTRL + Space for content assist.&#xA;&#xA;internal:&#x9;&#xA;&#x9;var viMyCounter: uint32_t" name="Statechart" domainID="com.yakindu.domain.c">
+  <sgraph:Statechart xmi:id="_O39IYAClEea895739UzP5A" specification="// Use the event driven execution model.&#xA;// Switch to cycle based behavior&#xA;// by specifying '@CycleBased(200)'.&#xA;@EventDriven&#xA;&#xA;// Use @SuperSteps(yes) to enable&#xA;// super step semantics.&#xA;@SuperSteps(no)&#xA;&#xA;import : &quot;../modules/leds/leds.h&quot;&#xA;import : &quot;../arm_book_lib.h&quot;&#xA;&#xA;interface:&#xA;&#x9;// Define events and variables here. &#xA;&#x9;// Use CTRL + Space for content assist.&#xA;&#xA;internal:&#x9;&#xA;&#x9;var viMyCounter: uint32_t" name="Statechart" domainID="com.yakindu.domain.c">
     <regions xmi:id="_cUNV0E_6Ee2DOOvoDMz1og" name="Blink">
       <vertices xsi:type="sgraph:Entry" xmi:id="_cUNV0U_6Ee2DOOvoDMz1og">
         <outgoingTransitions xmi:id="_cUNV0k_6Ee2DOOvoDMz1og" specification="/ opLedInit();&#xD;&#xA;viMyCounter = 0" target="_cUN85U_6Ee2DOOvoDMz1og"/>
       </vertices>
-      <vertices xsi:type="sgraph:State" xmi:id="_cUN85U_6Ee2DOOvoDMz1og" specification="entry / &#xD;&#xA;opLedUpdate();&#xD;&#xA;viMyCounter++" name="Turn_OFF" incomingTransitions="_cUNV0k_6Ee2DOOvoDMz1og _cUOkCU_6Ee2DOOvoDMz1og">
+      <vertices xsi:type="sgraph:State" xmi:id="_cUN85U_6Ee2DOOvoDMz1og" specification="entry / &#xD;&#xA;opLedWrite( ON );&#xD;&#xA;viMyCounter++" name="Turn_ON" incomingTransitions="_cUNV0k_6Ee2DOOvoDMz1og _cUOkCU_6Ee2DOOvoDMz1og">
         <outgoingTransitions xmi:id="_cUOj80_6Ee2DOOvoDMz1og" specification="after 500 ms" target="_cUOj-E_6Ee2DOOvoDMz1og"/>
       </vertices>
-      <vertices xsi:type="sgraph:State" xmi:id="_cUOj-E_6Ee2DOOvoDMz1og" specification="entry / &#xD;&#xA;opLedUpdate();&#xD;&#xA;viMyCounter--" name="Turn_ON" incomingTransitions="_cUOj80_6Ee2DOOvoDMz1og">
+      <vertices xsi:type="sgraph:State" xmi:id="_cUOj-E_6Ee2DOOvoDMz1og" specification="entry / &#xD;&#xA;opLedWrite( OFF );&#xD;&#xA;viMyCounter--" name="Turn_OFF" incomingTransitions="_cUOj80_6Ee2DOOvoDMz1og">
         <outgoingTransitions xmi:id="_cUOkCU_6Ee2DOOvoDMz1og" specification="after 1 s" target="_cUN85U_6Ee2DOOvoDMz1og"/>
       </vertices>
     </regions>

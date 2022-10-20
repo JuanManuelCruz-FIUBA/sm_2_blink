@@ -10,6 +10,7 @@ class Statechart;
 
 
 #include "../modules/leds/leds.h"
+#include "../arm_book_lib.h"
 #include <deque>
 #include "sc_types.h"
 #include "sc_statemachine.h"
@@ -30,8 +31,8 @@ namespace statechart_events
 {
 typedef enum  {
 	invalid_event = SC_INVALID_EVENT_VALUE,
-	Statechart_Blink_Turn_OFF_time_event_0,
-	Statechart_Blink_Turn_ON_time_event_0
+	Statechart_Blink_Turn_ON_time_event_0,
+	Statechart_Blink_Turn_OFF_time_event_0
 } StatechartEventName;
 
 class SctEvent
@@ -66,8 +67,8 @@ class TimedSctEvent : public SctEvent
 
 
 /*! Define indices of states in the StateConfVector */
-#define SCVI_BLINK_TURN_OFF 0
 #define SCVI_BLINK_TURN_ON 0
+#define SCVI_BLINK_TURN_OFF 0
 
 
 class Statechart : public sc::timer::TimedInterface, public sc::StatemachineInterface
@@ -81,8 +82,8 @@ class Statechart : public sc::timer::TimedInterface, public sc::StatemachineInte
 		typedef enum
 		{
 			Statechart_last_state,
-			Blink_Turn_OFF,
-			Blink_Turn_ON
+			Blink_Turn_ON,
+			Blink_Turn_OFF
 		} StatechartStates;
 					
 		static const sc_integer numStates = 2;
@@ -169,20 +170,20 @@ class Statechart : public sc::timer::TimedInterface, public sc::StatemachineInte
 		
 		// prototypes of all internal functions
 		
-		void enact_Blink_Turn_OFF();
 		void enact_Blink_Turn_ON();
-		void exact_Blink_Turn_OFF();
+		void enact_Blink_Turn_OFF();
 		void exact_Blink_Turn_ON();
-		void enseq_Blink_Turn_OFF_default();
+		void exact_Blink_Turn_OFF();
 		void enseq_Blink_Turn_ON_default();
+		void enseq_Blink_Turn_OFF_default();
 		void enseq_Blink_default();
-		void exseq_Blink_Turn_OFF();
 		void exseq_Blink_Turn_ON();
+		void exseq_Blink_Turn_OFF();
 		void exseq_Blink();
 		void react_Blink__entry_Default();
 		sc_integer react(const sc_integer transitioned_before);
-		sc_integer Blink_Turn_OFF_react(const sc_integer transitioned_before);
 		sc_integer Blink_Turn_ON_react(const sc_integer transitioned_before);
+		sc_integer Blink_Turn_OFF_react(const sc_integer transitioned_before);
 		void clearInEvents();
 		void microStep();
 		void runCycle();

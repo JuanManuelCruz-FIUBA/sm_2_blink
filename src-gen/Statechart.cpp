@@ -46,12 +46,12 @@ void Statechart::dispatch_event(SctEvent * event)
 	}
 	switch(event->name)
 	{
-		case Statechart_Blink_Turn_OFF_time_event_0:
+		case Statechart_Blink_Turn_ON_time_event_0:
 		{
 			timeEvents[0] = true;
 			break;
 		}
-		case Statechart_Blink_Turn_ON_time_event_0:
+		case Statechart_Blink_Turn_OFF_time_event_0:
 		{
 			timeEvents[1] = true;
 			break;
@@ -85,10 +85,10 @@ void Statechart::internal_dispatch_event(SctEvent * event)
 StatechartEventName Statechart::getTimedEventName(sc_eventid evid)
 {
 	if (evid == (sc_eventid)(&timeEvents[0])) {
-		return Statechart_Blink_Turn_OFF_time_event_0;
+		return Statechart_Blink_Turn_ON_time_event_0;
 	}
 	if (evid == (sc_eventid)(&timeEvents[1])) {
-		return Statechart_Blink_Turn_ON_time_event_0;
+		return Statechart_Blink_Turn_OFF_time_event_0;
 	}
 	return invalid_event;
 }
@@ -143,14 +143,14 @@ sc_boolean Statechart::isStateActive(StatechartStates state) const
 {
 	switch (state)
 	{
-		case Blink_Turn_OFF :
-		{
-			return (sc_boolean) (stateConfVector[SCVI_BLINK_TURN_OFF] == Blink_Turn_OFF);
-			break;
-		}
 		case Blink_Turn_ON :
 		{
 			return (sc_boolean) (stateConfVector[SCVI_BLINK_TURN_ON] == Blink_Turn_ON);
+			break;
+		}
+		case Blink_Turn_OFF :
+		{
+			return (sc_boolean) (stateConfVector[SCVI_BLINK_TURN_OFF] == Blink_Turn_OFF);
 			break;
 		}
 		default:
@@ -164,44 +164,36 @@ sc_boolean Statechart::isStateActive(StatechartStates state) const
 
 
 // implementations of all internal functions
-/* Entry action for state 'Turn_OFF'. */
-void Statechart::enact_Blink_Turn_OFF()
-{
-	/* Entry action for state 'Turn_OFF'. */
-	timerService->setTimer(this, (sc_eventid)(&timeEvents[0]), 500, false);
-	opLedUpdate();
-	viMyCounter++;
-}
-
 /* Entry action for state 'Turn_ON'. */
 void Statechart::enact_Blink_Turn_ON()
 {
 	/* Entry action for state 'Turn_ON'. */
-	timerService->setTimer(this, (sc_eventid)(&timeEvents[1]), (1 * 1000), false);
-	opLedUpdate();
-	viMyCounter--;
+	timerService->setTimer(this, (sc_eventid)(&timeEvents[0]), 500, false);
+	opLedWrite(ON);
+	viMyCounter++;
 }
 
-/* Exit action for state 'Turn_OFF'. */
-void Statechart::exact_Blink_Turn_OFF()
+/* Entry action for state 'Turn_OFF'. */
+void Statechart::enact_Blink_Turn_OFF()
 {
-	/* Exit action for state 'Turn_OFF'. */
-	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[0]));
+	/* Entry action for state 'Turn_OFF'. */
+	timerService->setTimer(this, (sc_eventid)(&timeEvents[1]), (1 * 1000), false);
+	opLedWrite(OFF);
+	viMyCounter--;
 }
 
 /* Exit action for state 'Turn_ON'. */
 void Statechart::exact_Blink_Turn_ON()
 {
 	/* Exit action for state 'Turn_ON'. */
-	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[1]));
+	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[0]));
 }
 
-/* 'default' enter sequence for state Turn_OFF */
-void Statechart::enseq_Blink_Turn_OFF_default()
+/* Exit action for state 'Turn_OFF'. */
+void Statechart::exact_Blink_Turn_OFF()
 {
-	/* 'default' enter sequence for state Turn_OFF */
-	enact_Blink_Turn_OFF();
-	stateConfVector[0] = Blink_Turn_OFF;
+	/* Exit action for state 'Turn_OFF'. */
+	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[1]));
 }
 
 /* 'default' enter sequence for state Turn_ON */
@@ -212,19 +204,19 @@ void Statechart::enseq_Blink_Turn_ON_default()
 	stateConfVector[0] = Blink_Turn_ON;
 }
 
+/* 'default' enter sequence for state Turn_OFF */
+void Statechart::enseq_Blink_Turn_OFF_default()
+{
+	/* 'default' enter sequence for state Turn_OFF */
+	enact_Blink_Turn_OFF();
+	stateConfVector[0] = Blink_Turn_OFF;
+}
+
 /* 'default' enter sequence for region Blink */
 void Statechart::enseq_Blink_default()
 {
 	/* 'default' enter sequence for region Blink */
 	react_Blink__entry_Default();
-}
-
-/* Default exit sequence for state Turn_OFF */
-void Statechart::exseq_Blink_Turn_OFF()
-{
-	/* Default exit sequence for state Turn_OFF */
-	stateConfVector[0] = Statechart_last_state;
-	exact_Blink_Turn_OFF();
 }
 
 /* Default exit sequence for state Turn_ON */
@@ -235,6 +227,14 @@ void Statechart::exseq_Blink_Turn_ON()
 	exact_Blink_Turn_ON();
 }
 
+/* Default exit sequence for state Turn_OFF */
+void Statechart::exseq_Blink_Turn_OFF()
+{
+	/* Default exit sequence for state Turn_OFF */
+	stateConfVector[0] = Statechart_last_state;
+	exact_Blink_Turn_OFF();
+}
+
 /* Default exit sequence for region Blink */
 void Statechart::exseq_Blink()
 {
@@ -242,14 +242,14 @@ void Statechart::exseq_Blink()
 	/* Handle exit of all possible states (of Statechart.Blink) at position 0... */
 	switch(stateConfVector[ 0 ])
 	{
-		case Blink_Turn_OFF :
-		{
-			exseq_Blink_Turn_OFF();
-			break;
-		}
 		case Blink_Turn_ON :
 		{
 			exseq_Blink_Turn_ON();
+			break;
+		}
+		case Blink_Turn_OFF :
+		{
+			exseq_Blink_Turn_OFF();
 			break;
 		}
 		default:
@@ -264,7 +264,7 @@ void Statechart::react_Blink__entry_Default()
 	/* Default react sequence for initial entry  */
 	opLedInit();
 	viMyCounter = 0;
-	enseq_Blink_Turn_OFF_default();
+	enseq_Blink_Turn_ON_default();
 }
 
 sc_integer Statechart::react(const sc_integer transitioned_before) {
@@ -272,16 +272,16 @@ sc_integer Statechart::react(const sc_integer transitioned_before) {
 	return transitioned_before;
 }
 
-sc_integer Statechart::Blink_Turn_OFF_react(const sc_integer transitioned_before) {
-	/* The reactions of state Turn_OFF. */
+sc_integer Statechart::Blink_Turn_ON_react(const sc_integer transitioned_before) {
+	/* The reactions of state Turn_ON. */
 	sc_integer transitioned_after = transitioned_before;
 	if ((transitioned_after) < (0))
 	{ 
 		if (timeEvents[0])
 		{ 
-			exseq_Blink_Turn_OFF();
+			exseq_Blink_Turn_ON();
 			timeEvents[0] = false;
-			enseq_Blink_Turn_ON_default();
+			enseq_Blink_Turn_OFF_default();
 			react(0);
 			transitioned_after = 0;
 		} 
@@ -294,16 +294,16 @@ sc_integer Statechart::Blink_Turn_OFF_react(const sc_integer transitioned_before
 	return transitioned_after;
 }
 
-sc_integer Statechart::Blink_Turn_ON_react(const sc_integer transitioned_before) {
-	/* The reactions of state Turn_ON. */
+sc_integer Statechart::Blink_Turn_OFF_react(const sc_integer transitioned_before) {
+	/* The reactions of state Turn_OFF. */
 	sc_integer transitioned_after = transitioned_before;
 	if ((transitioned_after) < (0))
 	{ 
 		if (timeEvents[1])
 		{ 
-			exseq_Blink_Turn_ON();
+			exseq_Blink_Turn_OFF();
 			timeEvents[1] = false;
-			enseq_Blink_Turn_OFF_default();
+			enseq_Blink_Turn_ON_default();
 			react(0);
 			transitioned_after = 0;
 		} 
@@ -324,14 +324,14 @@ void Statechart::clearInEvents() {
 void Statechart::microStep() {
 	switch(stateConfVector[ 0 ])
 	{
-		case Blink_Turn_OFF :
-		{
-			Blink_Turn_OFF_react(-1);
-			break;
-		}
 		case Blink_Turn_ON :
 		{
 			Blink_Turn_ON_react(-1);
+			break;
+		}
+		case Blink_Turn_OFF :
+		{
+			Blink_Turn_OFF_react(-1);
 			break;
 		}
 		default:
